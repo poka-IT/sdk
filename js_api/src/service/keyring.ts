@@ -9,8 +9,7 @@ import {
 } from "@polkadot/util-crypto";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
 import gov from "./gov";
-import { wrapBytes } from "@polkadot/extension-dapp/wrapBytes";
-
+import { wrapBytes, unwrapBytes } from "@polkadot/extension-dapp/wrapBytes";
 import { Keyring } from "@polkadot/keyring";
 import { KeypairType } from "@polkadot/util-crypto/types";
 import { KeyringPair, KeyringPair$Json } from "@polkadot/keyring/types";
@@ -412,7 +411,7 @@ async function signBytesAsExtension(password: string, json: any) {
       }
       keyPair.decodePkcs8(password);
       resolve({
-        signature: u8aToHex(keyPair.sign(wrapBytes(json["data"]))),
+        signature: u8aToHex(keyPair.sign(unwrapBytes(json["data"]))),
       });
     } catch (err) {
       resolve({ error: err.message });
