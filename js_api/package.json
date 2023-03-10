@@ -21,7 +21,7 @@
   "scripts": {
     "clean": "rm -rf dist/*",
     "prebuild": "rm -rf ../assets/*.js",
-    "build": "yarn prebuild && yarn clean && webpack --mode production && yarn postbuild",
+    "build": "yarn prebuild; yarn clean; webpack --mode production && yarn postbuild",
     "postbuild": "mv dist/*.js ../assets/",
     "build-dev": "webpack --mode development"
   },
