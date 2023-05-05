@@ -1,16 +1,13 @@
 import { enable, handleResponse } from "@polkadot/extension-base/page";
 import { injectExtension } from "@polkadot/extension-inject";
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
+import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import handlers from "./handlers";
 
 // send message to JSChannel: assembly
 function send(path, data) {
-  if (window.location.href.match("js_as_extension")) {
-    console.log(path, data);
-  } else {
-    Extension.postMessage(JSON.stringify({ path, data }));
-  }
+  console.log(path, data);
 }
+
 send("log", "main js loaded");
 window.send = send;
 
@@ -61,5 +58,15 @@ async function test() {
 
 window.walletExtension = {
   test,
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
   onAppResponse: handlers.onAppResponse,
 };
+
+// const polkextension = {
+//   web3Accounts,
+//   web3Enable
+// }
+
+// export default polkextension;
