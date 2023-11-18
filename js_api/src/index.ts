@@ -1,4 +1,6 @@
 import { WsProvider, ApiPromise } from "@polkadot/api";
+import { decodeAddress, encodeAddress } from '@polkadot/keyring';
+import { hexToU8a, isHex } from '@polkadot/util';
 import { subscribeMessage, getNetworkConst, getNetworkProperties } from "./service/setting";
 import keyring from "./service/keyring";
 import account from "./service/account";
@@ -90,6 +92,10 @@ const settings = {
   keyring: { ...keyringETH, signEthRequest: signEthPayload, renderEthRequest: renderEthereumRequests },
   account: accountETH,
 };
+(<any>window).decodeAddress = decodeAddress;
+(<any>window).encodeAddress = encodeAddress;
+(<any>window).hexToU8a = hexToU8a;
+(<any>window).isHex = isHex;
 
 // walletConnect supporting is not ready.
 (<any>window).walletConnect = wc;
