@@ -21,7 +21,7 @@
   "scripts": {
     "clean": "rm -f dist/*",
     "prebuild": "rm -f ../assets/*.js",
-    "build": "yarn prebuild && yarn clean && webpack --mode production && yarn postbuild",
+    "build": "yarn prebuild; yarn clean; webpack --mode production; yarn postbuild",
     "postbuild": "mv dist/*.js ../assets/",
     "build-dev": "webpack --mode development"
   },
@@ -98,5 +98,5 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@4.0.2"
 }
