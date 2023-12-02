@@ -1,6 +1,6 @@
 import { enable, handleResponse } from "@polkadot/extension-base/page";
 import { injectExtension } from "@polkadot/extension-inject";
-import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
+import { web3Accounts, web3Enable, web3FromAddress, isWeb3Injected } from "@polkadot/extension-dapp";
 import handlers from "./handlers";
 
 // send message to JSChannel: assembly
@@ -34,16 +34,6 @@ window.addEventListener("message", ({ data, source }) => {
   }
 });
 
-injectExtension(enable, {
-  name: "polkadot-js",
-  version: "0.9.0",
-});
-
-injectExtension(enable, {
-  name: "polkawallet",
-  version: "0.9.0",
-});
-
 async function test() {
   // returns an array of all the injected sources
   // (this needs to be called first, before other requests)
@@ -61,6 +51,7 @@ window.walletExtension = {
   web3Accounts,
   web3Enable,
   web3FromAddress,
+  isWeb3Injected,
   onAppResponse: handlers.onAppResponse,
 };
 
