@@ -60,7 +60,6 @@ class WebViewEthInjected extends StatefulWidget {
 
 class _WebViewEthInjectedState extends State<WebViewEthInjected> {
   late WebViewController _controller;
-  bool _loadingFinished = false;
   bool _signing = false;
 
   Future<dynamic> _respondToDApp(Map msg, Map? res) async {
@@ -210,7 +209,7 @@ class _WebViewEthInjectedState extends State<WebViewEthInjected> {
                 {'id': msg['id'], 'url': msg['url']}));
         _signing = false;
         return _controller.runJavaScript(
-            'walletExtension.onAppResponse("${msg['msgType']}${msg['id']}", ${addressAuthed.isNotEmpty ?? false}, null)');
+            'walletExtension.onAppResponse("${msg['msgType']}${msg['id']}", ${addressAuthed.isNotEmpty}, null)');
       case 'pub(accounts.list)':
       case 'pub(accounts.subscribe)':
         final List res = authed.map((e) {
