@@ -10,7 +10,6 @@ import 'package:polkawallet_sdk/plugin/store/balances.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/service/webViewRunner.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:polkawallet_sdk/storage/keyringEVM.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:polkawallet_sdk/utils/app.dart';
 
@@ -96,24 +95,9 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
 
   /// This method will be called while user request to query balance.
   Future<void> updateBalances(KeyPairData acc) async {
-    if (acc.pubKey == acc.address) {
-      //eth
-      final data =
-          await sdk.api.eth.account.getNativeTokenBalance(acc.address ?? '');
-
-      _updateBalances(
-          acc,
-          BalanceData()
-            ..accountId = acc.address
-            ..freeBalance = data
-            ..availableBalance = data
-            ..lockedBalance = '0'
-            ..reservedBalance = '0');
-    } else {
-      final data = await (sdk.api.account.queryBalance(acc.address)
-          as FutureOr<BalanceData>);
-      _updateBalances(acc, data);
-    }
+    final data = await (sdk.api.account.queryBalance(acc.address)
+        as FutureOr<BalanceData>);
+    _updateBalances(acc, data);
   }
 
   void loadBalances(KeyPairData acc) {
@@ -131,21 +115,15 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
   /// This method will be called while App switched to a plugin.
   /// In this method, the plugin will init [WalletSDK] and start
   /// a webView for running `polkadot-js/api`.
-  Future<void> beforeStart(
-    Keyring keyring, {
-    KeyringEVM? keyringEVM,
-    WebViewRunner? webView,
-    String? jsCode,
-    Function? socketDisconnectedAction,
-    bool isEVM = false,
-  }) async {
+  Future<void> beforeStart(Keyring keyring,
+      {WebViewRunner? webView,
+      String? jsCode,
+      Function? socketDisconnectedAction}) async {
     await sdk.init(keyring,
-        keyringEVM: keyringEVM,
         webView: webView,
         jsCode: jsCode ?? (await loadJSCode()),
-        socketDisconnectedAction: socketDisconnectedAction,
-        isEVM: isEVM);
-    await (isEVM ? onWillStartEVM(keyringEVM!) : onWillStart(keyring));
+        socketDisconnectedAction: socketDisconnectedAction);
+    await (onWillStart(keyring));
   }
 
   /// This method will be called while App switched to a plugin.
@@ -154,73 +132,33 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
   /// 2. retrieve network const & state.
   /// 3. subscribe balances & set balancesStore.
   Future<NetworkParams?> start(Keyring keyring,
-      {List<NetworkParams>? nodes,
-      KeyringEVM? keyringEVM,
-      NetworkParams? nodeEVM}) async {
-    if (nodeEVM == null) {
-      final res = await sdk.api.connectNode(keyring, nodes ?? nodeList);
-      if (res == null) return null;
+      {List<NetworkParams>? nodes, NetworkParams? nodeEVM}) async {
+    final res = await sdk.api.connectNode(keyring, nodes ?? nodeList);
+    if (res == null) return null;
 
-      keyring.setSS58(res.ss58);
-      await updateNetworkState();
+    keyring.setSS58(res.ss58);
+    await updateNetworkState();
 
-      if (keyring.current.address != null) {
-        sdk.api.account.subscribeBalance(keyring.current.address,
-            (BalanceData data) {
-          _updateBalances(keyring.current, data);
-        });
-      }
-
-      onStarted(keyring);
-
-      return res;
+    if (keyring.current.address != null) {
+      sdk.api.account.subscribeBalance(keyring.current.address,
+          (BalanceData data) {
+        _updateBalances(keyring.current, data);
+      });
     }
 
-    final evmRes = await sdk.api.connectEVM(nodeEVM);
-    if (evmRes == null) return null;
+    onStarted(keyring);
 
-    if (keyringEVM?.current.address != null) {
-      final data = await sdk.api.eth.account
-          .getNativeTokenBalance(keyringEVM?.current.address ?? '');
-
-      _updateBalances(
-          keyringEVM!.current.toKeyPairData(),
-          BalanceData()
-            ..accountId = keyringEVM.current.address
-            ..freeBalance = data
-            ..availableBalance = data
-            ..lockedBalance = '0'
-            ..reservedBalance = '0');
-    }
-
-    onStartedEVM(keyringEVM!);
-
-    return evmRes;
+    return res;
   }
 
   /// This method will be called while App user changes account.
   Future<void> changeAccount(KeyPairData account) async {
     onAccountChanged(account);
-    if (account.pubKey == account.address) {
-      //eth
-      final data = await sdk.api.eth.account
-          .getNativeTokenBalance(account.address ?? '');
-
-      _updateBalances(
-          account,
-          BalanceData()
-            ..accountId = account.address
-            ..freeBalance = data
-            ..availableBalance = data
-            ..lockedBalance = '0'
-            ..reservedBalance = '0');
-    } else {
-      sdk.api.account.unsubscribeBalance();
-      loadBalances(account);
-      sdk.api.account.subscribeBalance(account.address, (BalanceData data) {
-        _updateBalances(account, data);
-      });
-    }
+    sdk.api.account.unsubscribeBalance();
+    loadBalances(account);
+    sdk.api.account.subscribeBalance(account.address, (BalanceData data) {
+      _updateBalances(account, data);
+    });
   }
 
   /// This method will be called before plugin start
@@ -230,17 +168,8 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
     }
   }
 
-  Future<void> onWillStartEVM(KeyringEVM keyring) async {
-    if (keyring.current.address != null) {
-      loadBalances(keyring.current.toKeyPairData());
-    }
-  }
-
   /// This method will be called after plugin started
   Future<void> onStarted(Keyring keyring) async => null;
-
-  /// This method will be called after plugin started
-  Future<void> onStartedEVM(KeyringEVM keyringEvm) async => null;
 
   /// This method will be called while App user changes account.
   /// In this method, the plugin should do:
