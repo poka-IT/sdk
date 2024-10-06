@@ -352,8 +352,8 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.5.9+4"
-  sec:
+    version: "0.6.1"
+  process:
     dependency: transitive
     description:
       name: sec

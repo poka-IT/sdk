@@ -1,3 +1,26 @@
+## [0.6.2]
+20240907
+* bump polkadot-js/api 12.4.2
+
+## [0.6.1+1]
+20240716
+* bump polkawallet/bridge 0.1.7-11
+
+## [0.6.1]
+20240708
+* bump polkadot-js/api 11.1.1
+* bump polkawallet/bridge 0.1.7-9
+* add multiChain api for parachain connection
+
+## [0.6.0+1]
+20240509
+* bump polkawallet/bridge 0.1.7-2
+
+## [0.6.0]
+20240425
+* bump polkawallet/bridge 0.1.6-3
+* bump polkadot-js/api 11.0.2
+
 ## [0.5.9+4]
 20240318
 * bump polkawallet/bridge 0.1.5

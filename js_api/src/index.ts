@@ -11,6 +11,7 @@ import gov from "./service/gov";
 import gov2 from "./service/gov2";
 import parachain from "./service/parachain";
 import assets from "./service/assets";
+import multiChain from "./service/multiChain";
 import { genLinks } from "./utils/config/config";
 
 // ethers APIs:
@@ -87,6 +88,7 @@ const settings = {
 (<any>window).gov2 = gov2;
 (<any>window).parachain = parachain;
 (<any>window).assets = assets;
+(<any>window).multiChain = multiChain;
 (<any>window).eth = {
   settings: { connect: connectEVM },
   keyring: { ...keyringETH, signEthRequest: signEthPayload, renderEthRequest: renderEthereumRequests },
