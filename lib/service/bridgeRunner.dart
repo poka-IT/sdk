@@ -48,19 +48,14 @@ class BridgeRunner {
         androidOnRenderProcessGone: (webView, detail) async {
           if (_web?.webViewController == webView) {
             webViewLoaded = false;
-            await _web?.webViewController.clearCache();
-            await _web?.webViewController.reload();
+            await _web?.webViewController?.clearCache();
+            await _web?.webViewController?.reload();
           }
         },
-        initialUrlRequest: URLRequest(
-            url: Uri.parse(
-                "http://localhost:8080/packages/polkawallet_sdk/assets/bridge.html")),
+        initialUrlRequest: URLRequest(url: WebUri("http://localhost:8080/packages/polkawallet_sdk/assets/bridge.html")),
         onWebViewCreated: (controller) async {
           print('Bridge HeadlessInAppWebView created!');
-          controller.loadUrl(
-              urlRequest: URLRequest(
-                  url: Uri.parse(
-                      "http://localhost:8080/packages/polkawallet_sdk/assets/bridge.html")));
+          controller.loadUrl(urlRequest: URLRequest(url: WebUri("http://localhost:8080/packages/polkawallet_sdk/assets/bridge.html")));
         },
         onConsoleMessage: (controller, message) {
           print("CONSOLE MESSAGE: " + message.message);
@@ -78,8 +73,7 @@ class BridgeRunner {
               // ignore
             }
           }
-          if (message.message.contains("WebSocket is not connected") &&
-              socketDisconnectedAction != null) {
+          if (message.message.contains("WebSocket is not connected") && socketDisconnectedAction != null) {
             socketDisconnectedAction();
           }
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
@@ -123,7 +117,7 @@ class BridgeRunner {
 
   void _tryReload() {
     if (!webViewLoaded) {
-      _web?.webViewController.reload();
+      _web?.webViewController?.reload();
     }
   }
 
@@ -135,7 +129,7 @@ class BridgeRunner {
   Future<void> _startJSCode() async {
     // inject js file to webView
     if (_jsCode != null) {
-      await _web!.webViewController.evaluateJavascript(source: _jsCode!);
+      await _web!.webViewController?.evaluateJavascript(source: _jsCode!);
     }
 
     _onLaunched!();
@@ -165,8 +159,7 @@ class BridgeRunner {
     }
 
     if (!wrapPromise) {
-      final res =
-          await _web!.webViewController.evaluateJavascript(source: code);
+      final res = await _web!.webViewController?.evaluateJavascript(source: code);
       return res;
     }
 
@@ -181,7 +174,7 @@ class BridgeRunner {
         '}).catch(function(err) {'
         '  console.log(JSON.stringify({ path: "log", data: {call: "$method", error: err.message} }));'
         '});';
-    _web!.webViewController.evaluateJavascript(source: script);
+    _web!.webViewController?.evaluateJavascript(source: script);
 
     return c.future;
   }
@@ -198,8 +191,7 @@ class BridgeRunner {
   void unsubscribeMessage(String channel) {
     print('unsubscribe $channel');
     final unsubCall = 'unsub$channel';
-    _web!.webViewController
-        .evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
+    _web!.webViewController?.evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
   }
 
   void addMsgHandler(String channel, Function onMessage) {
@@ -220,7 +212,7 @@ class BridgeRunner {
 
   Future<void> reload() async {
     webViewLoaded = false;
-    await _web?.webViewController.clearCache();
-    return _web?.webViewController.reload();
+    await _web?.webViewController?.clearCache();
+    return _web?.webViewController?.reload();
   }
 }
