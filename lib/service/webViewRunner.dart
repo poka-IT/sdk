@@ -65,11 +65,11 @@ class WebViewRunner {
           if (_web?.webViewController == webView) {
             webViewLoaded = false;
             _webViewOOMReload = true;
-            await _web?.webViewController?.clearCache();
-            await _web?.webViewController?.reload();
+            await _web?.webViewController.clearCache();
+            await _web?.webViewController.reload();
           }
         },
-        initialUrlRequest: URLRequest(url: WebUri("http://localhost:8080/packages/polkawallet_sdk/assets/index.html")),
+        initialUrlRequest: URLRequest(url: Uri.parse("http://localhost:8080/packages/polkawallet_sdk/assets/index.html")),
         onWebViewCreated: (controller) {
           print('HeadlessInAppWebView created!');
         },
@@ -137,7 +137,7 @@ class WebViewRunner {
         },
         onLoadStop: (controller, url) async {
           print('webview loaded $url');
-          final jsLoaded = await _web!.webViewController?.evaluateJavascript(source: '!!account;');
+          final jsLoaded = await _web!.webViewController.evaluateJavascript(source: '!!account;');
           if (webViewLoaded) return;
 
           if (jsLoaded == true) {
@@ -161,14 +161,14 @@ class WebViewRunner {
 
   void _tryReload() {
     if (!webViewLoaded) {
-      _web?.webViewController?.reload();
+      _web?.webViewController.reload();
     }
   }
 
   Future<void> _startJSCode() async {
     // inject js file to webView
     if (_jsCode != null) {
-      await _web!.webViewController?.evaluateJavascript(source: _jsCode!);
+      await _web!.webViewController.evaluateJavascript(source: _jsCode!);
     }
 
     _onLaunched!();
@@ -198,7 +198,7 @@ class WebViewRunner {
     }
 
     if (!wrapPromise) {
-      final res = await _web!.webViewController?.evaluateJavascript(source: code);
+      final res = await _web!.webViewController.evaluateJavascript(source: code);
       return res;
     }
 
@@ -214,7 +214,7 @@ class WebViewRunner {
         '}).catch(function(err) {'
         '  console.log(JSON.stringify({ path: "$method", error: err.message }));'
         '});';
-    _web!.webViewController?.evaluateJavascript(source: script);
+    _web!.webViewController.evaluateJavascript(source: script);
     _msgJavascript[jsCall[0]] = script;
 
     return c.future;
@@ -230,7 +230,7 @@ class WebViewRunner {
       if (_webViewOOMReload) {
         print("webView OOM Reload evaluateJavascript====\n${_msgJavascript.keys.toString()}");
         _msgJavascript.forEach((key, value) {
-          _web!.webViewController?.evaluateJavascript(source: value);
+          _web!.webViewController.evaluateJavascript(source: value);
         });
         _msgJavascript = {};
         _webViewOOMReload = false;
@@ -246,7 +246,7 @@ class WebViewRunner {
       if (_webViewOOMReload) {
         print("webView OOM Reload evaluateJavascript====\n${_msgJavascript.keys.toString()}");
         _msgJavascript.forEach((key, value) {
-          _web!.webViewController?.evaluateJavascript(source: value);
+          _web!.webViewController.evaluateJavascript(source: value);
         });
         _msgJavascript = {};
         _webViewOOMReload = false;
@@ -269,7 +269,7 @@ class WebViewRunner {
   void unsubscribeMessage(String channel) {
     print('unsubscribe $channel');
     final unsubCall = 'unsub$channel';
-    _web!.webViewController?.evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
+    _web!.webViewController.evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
   }
 
   void addMsgHandler(String channel, Function onMessage) {
