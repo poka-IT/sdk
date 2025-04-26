@@ -1,3 +1,28 @@
+## [0.6.6]
+20250330
+* bump polkadot-js/api 15.8.1
+
+## [0.6.5]
+20250220
+* bump polkadot-js/api 15.5.1
+* use forked inappwebview
+
+## [0.6.4]
+20241207
+* bump polkawallet/bridge 0.1.7-13.
+
+## [0.6.3+2]
+20241119
+* bump acala/eth-providers 2.8+ & fix bridge.
+
+## [0.6.3+1]
+20241111
+* remove unused ethers deps.
+
+## [0.6.3]
+20241027
+* bump polkadot-js/api 14.1.1
+
 ## [0.6.2]
 20240907
 * bump polkadot-js/api 12.4.2
