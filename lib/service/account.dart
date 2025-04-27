@@ -38,9 +38,11 @@ class ServiceAccount {
 
   /// Get on-chain account info of addresses
   Future<List?> queryIndexInfo(List addresses) async {
-    final dynamic res = await serviceRoot.webView!.evalJavascript(
-        'account.getAccountIndex(api, ${jsonEncode(addresses)})');
-    return res;
+    // final dynamic res = await serviceRoot.webView!.evalJavascript(
+    //     'account.getAccountIndex(api, ${jsonEncode(addresses)})');
+    // return res;
+    //kopa this is shit that crash and we don't need it
+    return [];
   }
 
   /// query address with account index
