@@ -13,6 +13,7 @@ import parachain from "./service/parachain";
 import assets from "./service/assets";
 import multiChain from "./service/multiChain";
 import { genLinks } from "./utils/config/config";
+import { ACTIVE_DUNITER_NETWORK } from "./config.local";
 
 // ethers APIs:
 import keyringETH from "./service/eth/keyring";
@@ -69,6 +70,10 @@ const test = async () => {
   // send("log", props);
 };
 
+const getDuniterConfig = () => {
+  return ACTIVE_DUNITER_NETWORK;
+};
+
 const settings = {
   test,
   connect,
@@ -78,6 +83,8 @@ const settings = {
   getNetworkProperties,
   // generate external links to polkascan/subscan/polkassembly...
   genLinks,
+  // DUniter configuration
+  getDuniterConfig,
 };
 
 (<any>window).settings = settings;

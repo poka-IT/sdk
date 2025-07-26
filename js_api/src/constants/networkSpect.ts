@@ -42,6 +42,7 @@ export const UnknownNetworkKeys = Object.freeze({
 export const SubstrateNetworkKeys = Object.freeze({
   KUSAMA: "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe", // https://polkascan.io/pre/kusama-cc3/block/0
   POLKADOT: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3",
+  DUNITER_GTEST: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", // À remplacer par le vrai genesis hash de gtest
   // POLKADOT: "0xf504dfecf2f636e831f2f2b178bbb8a4eacd22526eff6a2318dcd7a9abfd0d0d",//dev
 });
 
@@ -77,6 +78,16 @@ const substrateNetworkBase = {
     prefix: 0,
     title: "Polkadot",
     unit: "DOT",
+  },
+  [SubstrateNetworkKeys.DUNITER_GTEST]: {
+    color: "#00B4CC",
+    decimals: 5,
+    genesisHash: SubstrateNetworkKeys.DUNITER_GTEST,
+    order: 3,
+    pathId: "duniter-gtest",
+    prefix: 42,
+    title: "DUniter gtest",
+    unit: "ĞTest",
   },
 };
 
